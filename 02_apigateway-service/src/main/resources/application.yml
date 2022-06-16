@@ -46,3 +46,7 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/**
+        - id: catlog-service
+          uri: lb://CATLOG-SERVICE
+          predicates:
+            - Path=/catalog-service/**

@@ -1,5 +1,6 @@
 package com.example.userservice.security;
 
+
 import com.example.userservice.service.UserService;
 import com.example.userservice.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -7,63 +8,53 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-/*
-public class WebSecurity extends WebSecurityConfigurerAdapter{
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
-    }
-}
-*/
-
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
+@EnableWebSecurity
 public class SecurityConfig {
-    private final AuthenticationConfiguration authenticationConfiguration;
+
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final Environment env;
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserServiceImpl();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        AuthenticationManager authenticationManager = getAuthenticationFilter(http);
+
         http.csrf().disable();
 //        http.authorizeRequests().antMatchers("/users/**").permitAll();
-        http.authorizeRequests().antMatchers("/**")
-                .hasIpAddress("localhost")
+        http.authorizeRequests().anyRequest().authenticated()
+                .antMatchers("/**").hasIpAddress("192.168.219.101")
+                .antMatchers("/error/**").permitAll()
                 .and()
-                .addFilter(getAuthenticationFilter());
+                .authenticationManager(authenticationManager)
+                .addFilter(getAuthenticationFilter(authenticationManager));
+
         // frame load 하게 해줌
         http.headers().frameOptions().disable();
+
         return http.build();
     }
 
-    private AuthenticationFilter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter filter = new AuthenticationFilter();
-        filter.setAuthenticationManager(authenticationManager());
-        return filter;
+    private AuthenticationManager getAuthenticationFilter(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+        return authenticationManagerBuilder.build();
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager);
+//        authenticationFilter.setAuthenticationManager(authenticationManager);
+        return authenticationFilter;
     }
-
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
 
 
 }

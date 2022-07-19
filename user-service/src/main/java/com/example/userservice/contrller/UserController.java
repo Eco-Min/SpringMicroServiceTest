@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/")
+@RequestMapping("/")
 // api-gateway 에 lb 로 등록 될때 path 설정 사항이 앞으로 와야한다.
-@RequestMapping("/user-service")
+//@RequestMapping("/user-service")
 @AllArgsConstructor
 public class UserController {
 

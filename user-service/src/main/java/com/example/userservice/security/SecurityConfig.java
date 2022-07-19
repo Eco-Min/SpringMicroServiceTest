@@ -31,7 +31,7 @@ public class SecurityConfig {
 
         http.csrf().disable();
 //        http.authorizeRequests().antMatchers("/users/**").permitAll();
-        http.authorizeRequests().anyRequest().authenticated()
+        http.authorizeRequests()
                 .antMatchers("/**").hasIpAddress("192.168.219.101")
                 .antMatchers("/error/**").permitAll()
                 .and()
@@ -51,9 +51,7 @@ public class SecurityConfig {
     }
 
     private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager);
-//        authenticationFilter.setAuthenticationManager(authenticationManager);
-        return authenticationFilter;
+        return new AuthenticationFilter(authenticationManager, userService, env);
     }
 
 

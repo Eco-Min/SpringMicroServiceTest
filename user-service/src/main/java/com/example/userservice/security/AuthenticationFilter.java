@@ -1,5 +1,6 @@
 package com.example.userservice.security;
 
+import com.example.userservice.dta.UserDto;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -21,8 +23,17 @@ import java.util.ArrayList;
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    private UserService userService;
+    private Environment env;
+
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
+    }
+
+    public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService, Environment env) {
+        super.setAuthenticationManager(authenticationManager);
+        this.userService = userService;
+        this.env = env;
     }
 
     @Override
@@ -31,10 +42,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         try {
             RequestLogin creds = new ObjectMapper().readValue(request.getInputStream(), RequestLogin.class);
 
-            return new UsernamePasswordAuthenticationToken(
+            return getAuthenticationManager().authenticate(
+                    new UsernamePasswordAuthenticationToken(
                     creds.getEmail(),
                     creds.getPassword(),
-                    new ArrayList<>());
+                    new ArrayList<>()));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -47,6 +59,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-//        super.successfulAuthentication(request, response, chain, authResult);
+        String username = ((User) authResult.getPrincipal()).getUsername();
+        UserDto userDetails = userService.getUserDetailsByEmails(username);
     }
 }

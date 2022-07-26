@@ -1,0 +1,6 @@
+token:
+  expiration_time: 86400000 #1day expiration token
+  secret: Q4NSl604sgyHJj1qwEkR3ycUeR4uUAt7WJraD7EN3O9DVM4yyYuHxMEbSF4XXyYJkal13eqgB0F7Bq4H
+
+gateway:
+  ip: 192.168.219.101

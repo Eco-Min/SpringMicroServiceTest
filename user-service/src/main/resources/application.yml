@@ -30,10 +30,17 @@ eureka:
 greeting:
   message: Welcome to the Simple E-Commerce
 
-token:
-  expiration_time: 86400000 #하루짜리 토큰
-  # 간단한 문자로 하려했으나 error 토함 예전이랑 다름..
-  secret: Q4NSl604sgyHJj1qwEkR3ycUeR4uUAt7WJraD7EN3O9DVM4yyYuHxMEbSF4XXyYJkal13eqgB0F7Bq4H
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
+
+# msa config 에서 가져 올겁니다.
+#token:
+#  expiration_time: 86400000 #하루짜리 토큰
+#  # 간단한 문자로 하려했으나 error 토함 예전이랑 다름..
+#  secret: Q4NSl604sgyHJj1qwEkR3ycUeR4uUAt7WJraD7EN3O9DVM4yyYuHxMEbSF4XXyYJkal13eqgB0F7Bq4H
 
 #logging:
 #  level:

@@ -4,8 +4,13 @@ server:
 spring:
   application:
     name: config-service
+#  profiles:
+#    active: native #cloud.config.server.native 와 같이 연계되어 사용한다.
   cloud:
     config:
       server:
+#        native:
+#          search-locations: yaml 파일이 있는 폴더 위치를 넣어주면 된다.
         git:
           uri: file:///D:\\codes\\spring\\SpringMSAConfig\\git-local-repo
+#          uri: github 주소 로 이어지는것도 가능 합니다. github repository 값을 넣어 가능 합니다.

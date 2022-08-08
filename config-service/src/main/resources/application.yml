@@ -14,3 +14,14 @@ spring:
         git:
           uri: file:///D:\\codes\\spring\\SpringMSAConfig\\git-local-repo
 #          uri: github 주소 로 이어지는것도 가능 합니다. github repository 값을 넣어 가능 합니다.
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh, health

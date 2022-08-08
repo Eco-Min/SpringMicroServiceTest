@@ -9,14 +9,20 @@ spring:
       settings:
         web-allow-others: true
       path: /h2-console
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:~/testdb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;AUTO_SERVER=TRUE
-    username: sa
-    password:
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:~/testdb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;AUTO_SERVER=TRUE
+#    username: sa
+#    password:
   jpa:
     hibernate:
       ddl-auto: create
+#  rabbitmq 접속 정보
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
 
 eureka:
   instance:
@@ -34,7 +40,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans
+        include: refresh, health, beans, busrefresh
 
 # msa config 에서 가져 올겁니다.
 #token:

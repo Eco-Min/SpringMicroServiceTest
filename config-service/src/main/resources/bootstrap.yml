@@ -1,0 +1,6 @@
+encrypt:
+#  key: abcdefghijklmopqrstuvwyz0123456789
+  key-store:
+    location: file:///D:\codes\spring\SpringMSAConfig\keystore\apiEncryptionKey.jks
+    password: test1234
+    alias: apiEncryptionKey

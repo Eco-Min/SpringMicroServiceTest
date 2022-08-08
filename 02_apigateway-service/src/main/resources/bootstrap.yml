@@ -2,7 +2,8 @@ spring:
   cloud:
     config:
       uri: http://127.0.0.1:8888
-      name: ecommerce
+#      name: ecommerce
+      name: user-service
 #  profiles:
 #    active: prod #profile 에 따라 token.secret 이 달라 접속이 안된다.
 #    active: dev

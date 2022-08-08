@@ -4,16 +4,19 @@ import com.example.userservice.dta.UserDto;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.ResponseOrder;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,10 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private Environment env;
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -51,7 +58,15 @@ public class UserServiceImpl implements UserService {
         }
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
-        List<ResponseOrder> orderList = new ArrayList<>();
+//        List<ResponseOrder> orderList = new ArrayList<>();
+        String orderUrl = String.format(env.getProperty("order_service.url"), userId);
+        /* Using as rest template */
+        ResponseEntity<List<ResponseOrder>> orderListResponse =
+                restTemplate.exchange(orderUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<ResponseOrder>>() {
+                });
+
+        List<ResponseOrder> orderList = orderListResponse.getBody();
         userDto.setOrderList(orderList);
 
         return userDto;

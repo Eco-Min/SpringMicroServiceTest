@@ -36,6 +36,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.modelmapper/modelmapper
 	implementation 'org.modelmapper:modelmapper:3.1.0'
 
+	// https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+	implementation 'org.springframework.kafka:spring-kafka:2.9.1'
+
 }
 
 dependencyManagement {

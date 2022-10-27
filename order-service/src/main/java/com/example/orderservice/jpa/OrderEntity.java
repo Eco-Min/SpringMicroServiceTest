@@ -30,7 +30,7 @@ public class OrderEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String orderId;
 
-    @Column(nullable = false, updatable = false, insertable = false)
+    @Column(nullable = false, updatable = false, insertable = false, name = "created_at")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     private Date createAt;
 }
